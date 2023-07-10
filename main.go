@@ -56,9 +56,9 @@ func exp(url string, execute string) string {
 	result, _ := goquery.NewDocumentFromReader(rep3.Body)
 	reg, _ := regexp.MatchString(".sh:", result.Text())
 	if reg {
-		return "存在漏洞,执行结果如下：\n" + result.Text()
+		return url + ":存在漏洞,执行结果如下：\n" + result.Text()
 	} else {
-		return "未发现漏洞"
+		return url + ":未发现漏洞"
 	}
 }
 func main() {
